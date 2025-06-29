@@ -1,30 +1,4 @@
-# from encoder import encode_faces
-# from recognizer import FaceRecognizer
-# from test import capture_image
-
-# if __name__ == "__main__":
-
-#     # Hmm for now this will work.
-#     while True:
-#         action = int(input("What do you want to do? \n 1) Add Image \n 2) Detect \n 3) Exit\n"))
-#         match action:
-#             case 1: 
-#                 capture_image()
-#             case 2: 
-#                 # First encode faces (run once)
-#                 encode_faces()
-
-#                 # Then start real-time recognition
-#                 recognizer = FaceRecognizer()
-#                 recognizer.recognize_from_video()
-#             case 3: 
-#                 exit()
-
-
-import glob
 import tkinter as tk
-
-from idna import encode
 from encoder import encode_faces
 from recognizer import FaceRecognizer
 from test import capture_image
@@ -32,75 +6,55 @@ from test import capture_image
 window = tk.Tk()
 
 def take_image():
-    global window
     capture_image(window)
 
 def mtcnn_recog():
-    global window
     encode_faces()
-    # Then start real-time recognition
     recognizer = FaceRecognizer()
     recognizer.recognize_from_video(window, 1)
 
 def yolov8_recog():
-    global window
     encode_faces()
-    # Then start real-time recognition
     recognizer = FaceRecognizer()
     recognizer.recognize_from_video(window, 2)
 
-
 def main():
-    global window
-    window.title("Face recognition")
-    window.geometry("900x700")
+    window.title("Face Recognition System")
+    window.geometry("500x800")
+    window.configure(bg="#f0f0f0")
 
-    
-
-    # Add Image
-    image_button = tk.Button(
-        window, 
-        text= "Add Image",
-        command= take_image,
-        background= "Green",
-        pady= 10,
-        padx = 10
+    # Heading Label
+    title = tk.Label(
+        window,
+        text="Face Recognition App",
+        font=("Helvetica", 20, "bold"),
+        bg="#f0f0f0",
+        pady=5
     )
-    image_button.pack()
+    title.pack()
 
-    # detect using mtcnn
-    mtcnn_button = tk.Button(
-        window, 
-        text= "Start Detection (MTCNN)",
-        command= mtcnn_recog,
-        background= "Green",
-        pady= 10,
-        padx = 10
-    )
-    mtcnn_button.pack()
-    
-    # detect using yolov8 model
-    mtcnn_button = tk.Button(
-        window, 
-        text= "Start Detection (Yolov8)",
-        command= yolov8_recog,
-        background= "Green",
-        pady= 10,
-        padx = 10
-    )
-    mtcnn_button.pack()
+    # Frame to hold buttons
+    button_frame = tk.Frame(window, bg="#f0f0f0")
+    button_frame.pack(pady=10)
 
-    # Exit button 
-    exit_button = tk.Button(
-        window, 
-        text= "Exit",
-        command= exit,
-        background= "red",
-        pady= 10,
-        padx = 10
-    )
-    exit_button.pack()
-    
+    # Button styling
+    button_style = {
+        "font": ("Helvetica", 12),
+        "bg": "#4CAF50",
+        "fg": "white",
+        "padx": 20,
+        "pady": 0,
+        "bd": 0,
+        "relief": "ridge",
+        "width": 25
+    }
 
+    tk.Button(button_frame, text="➕ Add Image", command=take_image, **button_style).pack(pady=3)
+    tk.Button(button_frame, text="📸 Start Detection (MTCNN)", command=mtcnn_recog, **button_style).pack(pady=3)
+    tk.Button(button_frame, text="🤖 Start Detection (YOLOv8)", command=yolov8_recog, **button_style).pack(pady=3)
+    tk.Button(button_frame, text="🚪 Quit App", command=exit, **button_style).pack(pady=3)
+
+    window.protocol("WM_DELETE_WINDOW", exit)
     window.mainloop()
+
 main()
